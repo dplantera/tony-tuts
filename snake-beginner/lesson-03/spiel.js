@@ -14,7 +14,12 @@ document.body.appendChild(hudElement);
  */
 const maxW = canvasHtmlElement.clientWidth;
 const maxH = canvasHtmlElement.clientHeight;
+/** @type {'RUNNING' | 'GAME_OVER' | 'PAUSE' | 'START'} */
+let state = 'START';
+export let speed = 10;
 let score = 0;
+let lastScore = 0;
+let highScore = 0;
 function zeichneSpielBrett() {
     zeichneRechteck(0, 0, maxW, maxH, "black");
     zeichneRechteck(1, 1, maxW - 2, maxH - 2, "white");
@@ -24,6 +29,77 @@ function zeichneScore() {
     scoreElement.textContent = `score: ${score}`
 }
 
+function zeichneGameOver() {
+    const gameOverTxt = 'GAME OVER';
+    zeichenKontext.textAlign = 'center'
+    zeichenKontext.fillStyle = 'red'
+    zeichenKontext.font = '30px serif'
+    zeichenKontext.fillText(gameOverTxt, (maxW) / 2, maxH / 2)
+}
+
+function zeichnePause() {
+    const gameOverTxt = 'PAUSE';
+    zeichenKontext.textAlign = 'center'
+    zeichenKontext.fillStyle = 'grey'
+    zeichenKontext.font = '30px serif'
+    zeichenKontext.fillText(gameOverTxt, (maxW) / 2, maxH / 2)
+}
+
+function zeichneEndScore() {
+    if(lastScore !== score && score >= highScore){
+        const gameOverTxt = `NEW HIGH SCORE: ${score}`;
+        zeichenKontext.textAlign = 'center'
+        zeichenKontext.fillStyle = 'green'
+        zeichenKontext.font = '15px serif'
+        zeichenKontext.fillText(gameOverTxt, (maxW) / 2, maxH / 2 + 30)
+    }else {
+        const gameOverTxt = `Your Score: ${score}`;
+        zeichenKontext.textAlign = 'center'
+        zeichenKontext.fillStyle = 'black'
+        zeichenKontext.font = '15px serif'
+        zeichenKontext.fillText(gameOverTxt, (maxW) / 2, maxH / 2 + 30)
+
+    }
+}
+
+let animation;
+function zeichneWiederholung(render) {
+    if (!animation) {
+        animation = createAnimation({ show: 0.7, hide: 0.5 }, () => {
+            const gameOverTxt = 'PRESS SPACE TO CONTINUE';
+            zeichenKontext.textAlign = 'center'
+            zeichenKontext.fillStyle = 'grey'
+            zeichenKontext.font = '15px serif'
+            zeichenKontext.fillText(gameOverTxt, (maxW) / 2, maxH / 2 + 60)
+        })
+    }
+    animation.render(render);
+}
+
+function createAnimation(animationTime, animation) {
+    let last;
+    let show = true;
+    return {
+        last,
+        render(sec) {
+            if (typeof this.last === "undefined") {
+                this.last = sec;
+            }
+            if (show && (sec - this.last) >= animationTime.show) {
+                show = !show;
+                this.last = sec;
+            }
+            else if (!show && (sec - this.last) >= animationTime.hide) {
+                show = !show;
+                this.last = sec;
+            }
+
+            if (show) {
+                animation();
+            }
+        }
+    }
+}
 
 /**
  * ######################################
@@ -32,21 +108,22 @@ function zeichneScore() {
 const snakeSize = 10;
 let snakeX;
 let snakeY;
-let body = [];
+let body;
 /** @type {'HOCH' | 'RUNTER' | 'LINKS' | 'RECHTS'} */
 let richtung = 'RECHTS';
 function setzeSnake() {
     const pos = gibZufälligePosition(snakeSize);
     snakeX = pos.x;
     snakeY = pos.y;
+    body = [];
     body.push({ x: pos.x, y: pos.y, dir: richtung });
 }
 
 function bewegeSnake() {
-    // bewege kopf
-    if (richtung === 'PAUSE') {
+    if (state !== 'RUNNING') {
         return;
     }
+
     // bewege kopf
     if (richtung === 'LINKS') {
         snakeX = snakeX - snakeSize;
@@ -112,23 +189,32 @@ function zeichneFood() {
  * # Animation
  */
 export function update() {
+    if(state === 'START'){
+        setzeSnake();
+        setzeFood();
+        lastScore = score;
+        score = 0;
+        speed = 10;
+        state = 'RUNNING';
+    }
 
     bewegeSnake();
 
     // Verlierer Bedingung 1: tod durch Wand
     if (snakeX >= maxW || snakeX < 0 || snakeY >= maxH || snakeY < 0) {
-        console.log("ouch!")
-        score = 0;
-        body = [body[0]];
+        state = 'GAME_OVER';
+        highScore = Math.max(highScore, score);
     }
 
     // Verlierer Bedingung 2: tod durch "in den eigenen Schwanz beißen"
     let head = body[0];
     let tail = body.slice(1);
     if (tail.some(s => s.x === head.x && s.y === head.y)) {
-        console.log("ouch!", tail)
-        score = 0;
-        body = [body[0]];
+        state = 'GAME_OVER';
+    }
+
+    if (state === 'GAME_OVER') {
+        return;
     }
 
     // Score Bedingung: Pickup Food
@@ -137,22 +223,31 @@ export function update() {
         console.log("mampf", body);
         setzeFood();
         score++;
+        speed = speed + 1;
     }
 }
 
 export function zeichne(time) {
-    console.log(time)
     zeichneSpielBrett();
     zeichneScore();
     zeichneSnake();
     zeichneFood();
+
+    if (state === 'GAME_OVER') {
+        zeichneGameOver();
+        zeichneEndScore();
+        zeichneWiederholung(time);
+    }
+    else if(state === 'PAUSE'){
+        zeichnePause()
+        zeichneWiederholung(time);
+    }
 }
 
 export function beiStart() {
     console.log("spiel vorbereitung läuft...")
     addEventListener("keypress", beiTastatur);
-    setzeSnake();
-    setzeFood();
+    state = 'START';
 }
 
 /**
@@ -175,7 +270,15 @@ function beiTastatur(event) {
         richtung = 'RUNTER'
     }
     if (key === ' ') {
-        richtung = 'PAUSE'
+        if (state === 'PAUSE') {
+            state = 'RUNNING';
+        }
+        else if (state === 'RUNNING') {
+            state = 'PAUSE';
+        }
+        else if (state === 'GAME_OVER'){
+            state = 'START'
+        }
     }
 }
 

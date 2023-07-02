@@ -1,4 +1,4 @@
-import {beiStart, zeichne, update} from './lesson-02/spiel.js';
+import {beiStart, zeichne, update, speed} from './lesson-03/spiel.js';
 
 const aktuellerBrowserFenster = window;
 
@@ -6,7 +6,6 @@ const aktuellerBrowserFenster = window;
  * Machen wir dann später mal
  */
 let lastRenderSecond;
-let speed = 10;
 
 /**
  * Wir bereiten das Spiel vor und starten es.
