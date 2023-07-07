@@ -1,3 +1,11 @@
+
+
+
+/**
+ * ######################################
+ * # Html Elemente / html elements
+ */
+
 /***  @type {HTMLCanvasElement} */
 const canvasHtmlElement = document.getElementById("spiel-brett");
 /***  @type {CanvasRenderingContext2D} */
@@ -183,50 +191,6 @@ function zeichneFood() {
     zeichneRechteck(foodX, foodY, foodSize, foodSize, "orange");
 }
 
-
-/**
- * ######################################
- * # Animation
- */
-export function update() {
-    if(state === 'START'){
-        setzeSnake();
-        setzeFood();
-        lastScore = score;
-        score = 0;
-        speed = 10;
-        state = 'RUNNING';
-    }
-
-    bewegeSnake();
-
-    // Verlierer Bedingung 1: tod durch Wand
-    if (snakeX >= maxW || snakeX < 0 || snakeY >= maxH || snakeY < 0) {
-        state = 'GAME_OVER';
-        highScore = Math.max(highScore, score);
-    }
-
-    // Verlierer Bedingung 2: tod durch "in den eigenen Schwanz beißen"
-    let head = body[0];
-    let tail = body.slice(1);
-    if (tail.some(s => s.x === head.x && s.y === head.y)) {
-        state = 'GAME_OVER';
-    }
-
-    if (state === 'GAME_OVER') {
-        return;
-    }
-
-    // Score Bedingung: Pickup Food
-    if (snakeX === foodX && snakeY === foodY) {
-        body.push({ x: snakeX, y: snakeY, dir: richtung });
-        console.log("mampf", body);
-        setzeFood();
-        score++;
-        speed = speed + 1;
-    }
-}
-
 export function zeichne(time) {
     zeichneSpielBrett();
     zeichneScore();
@@ -305,4 +269,47 @@ function gibZufälligePosition(abstand) {
     const zeilen = Math.floor(maxW / abstand);
     const spalten = Math.floor(maxH / abstand);
     return { x: Math.floor(Math.random() * zeilen) * abstand, y: Math.floor(Math.random() * spalten) * abstand }
+}
+
+/**
+ * ######################################
+ * # Animation
+ */
+export function update() {
+    if(state === 'START'){
+        setzeSnake();
+        setzeFood();
+        lastScore = score;
+        score = 0;
+        speed = 10;
+        state = 'RUNNING';
+    }
+
+    bewegeSnake();
+
+    // Verlierer Bedingung 1: tod durch Wand
+    if (snakeX >= maxW || snakeX < 0 || snakeY >= maxH || snakeY < 0) {
+        state = 'GAME_OVER';
+        highScore = Math.max(highScore, score);
+    }
+
+    // Verlierer Bedingung 2: tod durch "in den eigenen Schwanz beißen"
+    let head = body[0];
+    let tail = body.slice(1);
+    if (tail.some(s => s.x === head.x && s.y === head.y)) {
+        state = 'GAME_OVER';
+    }
+
+    if (state === 'GAME_OVER') {
+        return;
+    }
+
+    // Score Bedingung: Pickup Food
+    if (snakeX === foodX && snakeY === foodY) {
+        body.push({ x: snakeX, y: snakeY, dir: richtung });
+        console.log("mampf", body);
+        setzeFood();
+        score++;
+        speed = speed + 1;
+    }
 }

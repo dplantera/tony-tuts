@@ -1,3 +1,10 @@
+
+
+/**
+ * ######################################
+ * # Html Elemente / html elements
+ */
+
 /***  @type {HTMLCanvasElement} */
 const canvasHtmlElement = document.getElementById("spiel-brett");
 /***  @type {CanvasRenderingContext2D} */
@@ -10,7 +17,7 @@ document.body.appendChild(hudElement);
 
 /**
  * ######################################
- * # spielbrett
+ * # spielbrett / game board (canvas)
  */
 const maxW = canvasHtmlElement.clientWidth;
 const maxH = canvasHtmlElement.clientHeight;
@@ -27,7 +34,7 @@ function zeichneScore() {
 
 /**
  * ######################################
- * # snake
+ * # snake (player)
  */
 const snakeSize = 10;
 let snakeX;
@@ -91,7 +98,7 @@ function zeichneSnake() {
 
 
 /** ######################################
- *  # essen
+ *  # essen / food (pick-up item)
  */
 const foodSize = 8;
 let foodX;
@@ -106,6 +113,75 @@ function zeichneFood() {
     zeichneRechteck(foodX, foodY, foodSize, foodSize, "orange");
 }
 
+
+export function zeichne(time) {
+    console.log(time)
+    zeichneSpielBrett();
+    zeichneScore();
+    zeichneSnake();
+    zeichneFood();
+}
+
+export function beiStart() {
+    console.log("spiel vorbereitung läuft...")
+    addEventListener("keypress", beiTastatur);
+    setzeSnake();
+    setzeFood();
+}
+
+/**
+ * ######################################
+ * # Verarbeitung von Nutzer Eingaben / handle user input (input handler)
+ */
+
+/**
+ * @param {KeyboardEvent}
+ */
+function beiTastatur(event) {
+    // damit die Schlangen nicht in sich selber reinlaufen kann, müssen wir prüfen, in welche Richtung der schwanz geht
+    const letzteRichtung = body[0]?.dir;
+    let key = event.key;
+    if (key === 'a' && (richtung !== 'RECHTS' && letzteRichtung !== 'RECHTS')) {
+        richtung = 'LINKS'
+    }
+    if (key === 'd' && (richtung !== 'LINKS' && letzteRichtung !== 'LINKS')) {
+        richtung = 'RECHTS'
+    }
+    if (key === 'w' && (richtung !== 'RUNTER' && letzteRichtung !== 'RUNTER')) {
+        richtung = 'HOCH'
+    }
+    if (key === 's' && (richtung !== 'HOCH' && letzteRichtung !== 'HOCH')) {
+        richtung = 'RUNTER'
+    }
+    if (key === ' ') {
+        richtung = 'PAUSE'
+    }
+}
+
+/**
+ * ######################################
+ * # Hilfsfunktionen / helper functions
+ */
+
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} h
+ * @param {'white' | 'black' | 'blue' | 'orange'} color
+ */
+function zeichneRechteck(x, y, w, h, color) {
+    zeichenKontext.fillStyle = color ?? "black";
+    zeichenKontext.fillRect(x, y, w, h);
+}
+
+/** Eine Zufällige position auf dem Spielbrett für ein Raster mit definierten Abstand */
+function gibZufälligePosition(abstand) {
+    const zeilen = Math.floor(maxW / abstand);
+    const spalten = Math.floor(maxH / abstand);
+    return { x: Math.floor(Math.random() * zeilen) * abstand, y: Math.floor(Math.random() * spalten) * abstand }
+}
 
 /**
  * ######################################
@@ -138,68 +214,4 @@ export function update() {
         setzeFood();
         score++;
     }
-}
-
-export function zeichne(time) {
-    console.log(time)
-    zeichneSpielBrett();
-    zeichneScore();
-    zeichneSnake();
-    zeichneFood();
-}
-
-export function beiStart() {
-    console.log("spiel vorbereitung läuft...")
-    addEventListener("keypress", beiTastatur);
-    setzeSnake();
-    setzeFood();
-}
-
-/**
- * @param {KeyboardEvent}
- */
-function beiTastatur(event) {
-    // damit die Schlangen nicht in sich selber reinlaufen kann, müssen wir prüfen, in welche Richtung der schwanz geht
-    const letzteRichtung = body[0]?.dir;
-    let key = event.key;
-    if (key === 'a' && (richtung !== 'RECHTS' && letzteRichtung !== 'RECHTS')) {
-        richtung = 'LINKS'
-    }
-    if (key === 'd' && (richtung !== 'LINKS' && letzteRichtung !== 'LINKS')) {
-        richtung = 'RECHTS'
-    }
-    if (key === 'w' && (richtung !== 'RUNTER' && letzteRichtung !== 'RUNTER')) {
-        richtung = 'HOCH'
-    }
-    if (key === 's' && (richtung !== 'HOCH' && letzteRichtung !== 'HOCH')) {
-        richtung = 'RUNTER'
-    }
-    if (key === ' ') {
-        richtung = 'PAUSE'
-    }
-}
-
-/**
- * ######################################
- * # Hilfsfunktionen
- */
-
-
-/**
- * @param {number} x
- * @param {number} y
- * @param {number} w
- * @param {number} h
- * @param {'white' | 'black' | 'blue' | 'orange'} color
- */
-function zeichneRechteck(x, y, w, h, color) {
-    zeichenKontext.fillStyle = color ?? "black";
-    zeichenKontext.fillRect(x, y, w, h);
-}
-
-/** Eine Zufällige position auf dem Spielbrett für ein Raster mit definierten Abstand */
-function gibZufälligePosition(abstand) {
-    const zeilen = Math.floor(maxW / abstand);
-    const spalten = Math.floor(maxH / abstand);
-    return { x: Math.floor(Math.random() * zeilen) * abstand, y: Math.floor(Math.random() * spalten) * abstand }
 }

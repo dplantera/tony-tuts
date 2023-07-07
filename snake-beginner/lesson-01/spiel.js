@@ -123,39 +123,10 @@ function zeichneFood() {
     zeichneRechteck(foodX, foodY, foodSize, foodSize, "orange");
 }
 
-
 /**
  * ######################################
- * # Animation
+ * # Verarbeitung von Nutzer Eingaben / handle user input ()
  */
-export function update(){
-    bewegeSnake();
-
-    if(snakeX === foodX && snakeY === foodY ){
-        console.log("mampf")
-        setzeFood();
-        score++;
-    }
-
-    if(snakeX >= maxW || snakeX < 0 || snakeY >= maxH ||  snakeY < 0){
-        console.log("ouch!")
-        score = 0;
-    }
-}
-
-export function zeichne(time) {
-    zeichneSpielBrett();
-    zeichneScore();
-    zeichneSnake();
-    zeichneFood();
-}
-
-export function beiStart(){
-    console.log("spiel vorbereitung läuft...")
-    addEventListener("keypress", beiTastatur);
-    setzeSnake();
-    setzeFood();
-}
 
 /**
  * @param {KeyboardEvent}
@@ -203,4 +174,39 @@ function gibZufälligePosition(abstand) {
     const zeilen = Math.floor(maxW / abstand);
     const spalten = Math.floor(maxH / abstand);
     return {x: Math.floor(Math.random() * zeilen) * abstand, y: Math.floor(Math.random() * spalten) * abstand}
+}
+
+
+/**
+ * ######################################
+ * # Animation
+ */
+
+export function update(){
+    bewegeSnake();
+
+    if(snakeX === foodX && snakeY === foodY ){
+        console.log("mampf")
+        setzeFood();
+        score++;
+    }
+
+    if(snakeX >= maxW || snakeX < 0 || snakeY >= maxH ||  snakeY < 0){
+        console.log("ouch!")
+        score = 0;
+    }
+}
+
+export function zeichne(time) {
+    zeichneSpielBrett();
+    zeichneScore();
+    zeichneSnake();
+    zeichneFood();
+}
+
+export function beiStart(){
+    console.log("spiel vorbereitung läuft...")
+    addEventListener("keypress", beiTastatur);
+    setzeSnake();
+    setzeFood();
 }
