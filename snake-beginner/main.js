@@ -1,4 +1,4 @@
-import {beiStart, zeichne, update, speed} from './lesson-03/spiel.js';
+import {beiStart, zeichne, update, speed} from './lesson-04/spiel.js';
 
 const aktuellerBrowserFenster = window;
 

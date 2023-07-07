@@ -118,13 +118,13 @@ let snakeX;
 let snakeY;
 let body;
 /** @type {'HOCH' | 'RUNTER' | 'LINKS' | 'RECHTS'} */
-let richtung = 'RECHTS';
+let playerDirection = 'RECHTS';
 function setzeSnake() {
     const pos = gibZufälligePosition(snakeSize);
     snakeX = pos.x;
     snakeY = pos.y;
     body = [];
-    body.push({ x: pos.x, y: pos.y, dir: richtung });
+    body.push({ x: pos.x, y: pos.y, dir: playerDirection });
 }
 
 function bewegeSnake() {
@@ -133,16 +133,16 @@ function bewegeSnake() {
     }
 
     // bewege kopf
-    if (richtung === 'LINKS') {
+    if (playerDirection === 'LINKS') {
         snakeX = snakeX - snakeSize;
     }
-    if (richtung === 'RECHTS') {
+    if (playerDirection === 'RECHTS') {
         snakeX = snakeX + snakeSize;
     }
-    if (richtung === 'HOCH') {
+    if (playerDirection === 'HOCH') {
         snakeY = snakeY - snakeSize;
     }
-    if (richtung === 'RUNTER') {
+    if (playerDirection === 'RUNTER') {
         snakeY = snakeY + snakeSize;
     }
 
@@ -165,7 +165,7 @@ function bewegeSnake() {
         body[i] = body[i - 1];
     }
     // setze neuen kopf
-    body[0] = { x: snakeX, y: snakeY, dir: richtung };
+    body[0] = { x: snakeX, y: snakeY, dir: playerDirection };
 }
 
 function zeichneSnake() {
@@ -221,17 +221,17 @@ function beiTastatur(event) {
     // damit die Schlangen nicht in sich selber reinlaufen kann, müssen wir prüfen, in welche Richtung der schwanz geht
     const letzteRichtung = body[0]?.dir;
     let key = event.key;
-    if (key === 'a' && (richtung !== 'RECHTS' && letzteRichtung !== 'RECHTS')) {
-        richtung = 'LINKS'
+    if (key === 'a' && (playerDirection !== 'RECHTS' && letzteRichtung !== 'RECHTS')) {
+        playerDirection = 'LINKS'
     }
-    if (key === 'd' && (richtung !== 'LINKS' && letzteRichtung !== 'LINKS')) {
-        richtung = 'RECHTS'
+    if (key === 'd' && (playerDirection !== 'LINKS' && letzteRichtung !== 'LINKS')) {
+        playerDirection = 'RECHTS'
     }
-    if (key === 'w' && (richtung !== 'RUNTER' && letzteRichtung !== 'RUNTER')) {
-        richtung = 'HOCH'
+    if (key === 'w' && (playerDirection !== 'RUNTER' && letzteRichtung !== 'RUNTER')) {
+        playerDirection = 'HOCH'
     }
-    if (key === 's' && (richtung !== 'HOCH' && letzteRichtung !== 'HOCH')) {
-        richtung = 'RUNTER'
+    if (key === 's' && (playerDirection !== 'HOCH' && letzteRichtung !== 'HOCH')) {
+        playerDirection = 'RUNTER'
     }
     if (key === ' ') {
         if (state === 'PAUSE') {
@@ -306,7 +306,7 @@ export function update() {
 
     // Score Bedingung: Pickup Food
     if (snakeX === foodX && snakeY === foodY) {
-        body.push({ x: snakeX, y: snakeY, dir: richtung });
+        body.push({ x: snakeX, y: snakeY, dir: playerDirection });
         console.log("mampf", body);
         setzeFood();
         score++;

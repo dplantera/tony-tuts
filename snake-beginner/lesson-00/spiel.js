@@ -1,12 +1,12 @@
 /* lesson-01
- * - wir holen uns HtmlElemente und speichern sie in globalen variablen:
+ * -> wir holen uns HtmlElemente und speichern sie in globalen variablen:
  *       canvasHtmlElement, zeichenKontext
- * - wir erstellen uns HtmlElemente und speichern sie in globalen variablen:
+ * -> wir erstellen uns HtmlElemente und speichern sie in globalen variablen:
  *       scoreElement, hudElement
  * - wir erstellen und verwenden Hilfs-Funktionen
- *       "zeichneRechteck", welche uns das zeichnen etwas erleichtert
+ * ->    "zeichneRechteck", welche uns das zeichnen etwas erleichtert
  *       "gibZufälligePosition", welche uns eine zufällige Position auf dem Spielfeld ausgibt
- * - wir zeichnen:
+ * -> wir zeichnen:
  *       ein Rechteck
  *       das Spielfeld
  *       die Spielfigur "snake", erstmals mit einer festen position
@@ -28,6 +28,40 @@
 
 /**
  * ######################################
+ * # Html Elemente / html elements
+ */
+
+
+/**
+ * ######################################
+ * # spielbrett / game board (canvas)
+ */
+
+
+/**
+ * ######################################
+ * # snake (player)
+ */
+
+
+/** ######################################
+ *  # essen / food (pick-up item)
+ */
+
+/**
+ * ######################################
+ * # Verarbeitung von Nutzer Eingaben / handle user input (input handler)
+ */
+
+/**
+ * ######################################
+ * # Hilfsfunktionen / helper functions
+ */
+
+
+
+/**
+ * ######################################
  * # Animation
  */
 export function update(){
@@ -38,33 +72,3 @@ export function zeichne(time) {
 
 export function beiStart(){
 }
-
-
-/**
- * ######################################
- * # Html Elemente / html elements
- */
-
-
-/**
- * ######################################
- * # spielbrett / game board
- */
-
-
-/**
- * ######################################
- * # snake (player)
- */
-
-
-
-/** ######################################
- *  # essen / food (pick-up item)
- */
-
-/**
- * ######################################
- * # Hilfsfunktionen / helper functions
- */
-
