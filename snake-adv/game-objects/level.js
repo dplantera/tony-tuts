@@ -13,7 +13,7 @@ export function createLevel(ctx, scale){
     maxH = 250 * scale/10;
     ctx.canvas.width = maxW;
     ctx.canvas.height = maxH;
-    console.log(`creating level: ${{maxW, maxH}} `)
+    console.log(`creating level:`, {maxW, maxH})
     return {
         get width(){return {min: minW, max: maxW}},
         get height(){return {min: minH, max: maxH}},

@@ -1,20 +1,16 @@
 import { drawRecFilled } from "../engine/index.js";
-import {getGameState} from "./game.js"
+import {createGameState} from "./state.js"
 /**
  * ######################################
  * # snake
  */
-let snakeSize;
-let speed;
-let snakeX;
-let snakeY;
-let body;
-let movement;
+let snakeSize, speed, snakeX, snakeY, body,  movement;
 /** @type {'HOCH' | 'RUNTER' | 'LINKS' | 'RECHTS'} */
 let playerDirection;
 
 /** @param {{pos: {x: number, y: number}, scale: number}} options  */
 export function createSnake(options) {
+    console.log("creating snake", options)
     snakeSize = options.scale;
     speed = {current: 10, min: 10, max: 25};
     const pos = options.pos;
@@ -37,7 +33,7 @@ export function createSnake(options) {
         draw
     }
 }
-/** @param {ReturnType<typeof getGameState>} game*/
+/** @param {ReturnType<typeof createGameState>} game*/
 function update(game, time){
     movement.update(game, time)
 }
@@ -64,7 +60,7 @@ export function increaseSpeed(){
     return speed.current + 0.5;;
 }
 
-/** @param {ReturnType<typeof getGameState>} game*/
+/** @param {ReturnType<typeof createGameState>} game*/
 function createMovement(){
     let lastRender;
     return {

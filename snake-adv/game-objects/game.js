@@ -1,31 +1,19 @@
-import {createLevel} from './level.js'
-import {createSnake} from './snake.js'
-import {createFood} from './food.js'
-import {createBoard} from './board.js'
+
 import {handlePlayerInput} from './input.js'
+import {createGameState} from './state.js'
 /** Eine Zufällige position auf dem Spielbrett für ein Raster mit definierten Abstand */
 
-/** @type {ReturnType<typeof createSnake>} */
-let snake;
-/** @type {ReturnType<typeof createLevel>} */
-let level;
-let pickUpItems = new Map();
-/** @type {number} */
+let gameState;
 let scale;
-/** @type {'RUNNING' | 'GAME_OVER' | 'PAUSE' | 'START'} */
-let state = 'START';
-/** @type {{current: number, last: number, high: number}} */
-let score;
-/** @type {ReturnType<typeof createBoard>} */
-let board;
 
 export function createGame(ctx){
+    console.log("creating game")
     scale = 15;
-    addEventListener("keypress", (e) => handlePlayerInput(e, getGameState()));
+    addEventListener("keypress", (e) => handlePlayerInput(e, gameState));
     return {
-        get state(){return state},
-        get score(){return score},
-        get level(){return level},
+        get state(){return gameState.state},
+        get score(){return gameState.score},
+        get level(){return gameState.level},
         start: () => startGame(ctx),
         draw,
         update
@@ -33,42 +21,19 @@ export function createGame(ctx){
 }
 
 function startGame(ctx){
-    level = createLevel(ctx, scale);
-    board = createBoard(getGameState());
-    snake = createSnake({ pos: board.getCenter(getGameState()), scale });
-    addFood();
-    score = {current: 0, last: score?.current ?? 0, high: score?.high ?? 0};
-    state = 'RUNNING';
-}
-
-function addFood(){
-    const food = createFood({pos: board.randomEmptyPosition(getGameState()), scale});
-    pickUpItems[food.id] = food;
-}
-function removeFood(id){
-    delete pickUpItems[id];
-}
-
-export function getGameState(){
-    return {
-        snake,
-        level,
-        pickUpItems,
-        score,
-        get state(){return state},
-        set state(value){state = value},
-        scale
-    }
+    console.log("starting game")
+    gameState = createGameState(ctx, scale);
+    gameState.state = "RUNNING"
 }
 
 function draw(time){
-    level.draw(getGameState(), time);
-    snake.draw(getGameState(), time);
-    Object.values(pickUpItems).forEach(p => p.draw())
+    gameState.level.draw(gameState, time);
+    gameState.snake.draw(gameState, time);
+    Object.values(gameState.pickUpItems).forEach(p => p.draw())
 }
 
 function update(time){
-    snake.update(getGameState(), time);
+    gameState.snake.update(gameState, time);
     maybe(isGameOver(), gameOver)
     maybe(findFood(), (food) => snakeEats(food.id));
     // level.update(getGameState(), time);
@@ -94,33 +59,34 @@ function isGameOver(){
 
 /** Verlierer Bedingung: tod durch Wand */
 function playerLostByEnvironment(){
-    return level.collided(snake.pos);
+    return gameState.level.collided(gameState.snake.pos);
 }
 
 /** Verlierer Bedingung: tod durch "in den eigenen Schwanz beißen */
 function playerLostBySelfDestruct(){
-    let head = snake.pos;
-    return snake.collided(head); 
+    let head = gameState.snake.pos;
+    return gameState.snake.collided(head); 
 }
 
 /** Score Bedingung: Pickup Food */
 function findFood(){
-    return Object.values(pickUpItems).filter(f => f.type === 'FOOD').find(f => f.collided(snake.pos));
+    return Object.values(gameState.pickUpItems).filter(f => f.type === 'FOOD').find(f => f.collided(gameState.snake.pos));
 }
 
 function snakeEats(id) {
     console.log("snake eats food with id ", id);
-    removeFood(id);
-    score.current++;
-    snake.grow();
-    snake.increaseSpeed();
-    addFood();
+    gameState.removeFood(id);
+    gameState.score.current++;
+    gameState.snake.grow();
+    gameState.snake.increaseSpeed();
+    gameState.addFood();
 }
 
 export function gameOver() {
-    console.log("game over");
-    state = 'GAME_OVER';
-    score.high = Math.max(score.high, score.current);
+    const score = gameState.score;
+    console.log("game over", score);
+    gameState.state = 'GAME_OVER';
+    score.high  = Math.max(score.high, score.current);
 }
 
 function maybe(condition, func){

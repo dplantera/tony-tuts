@@ -1,5 +1,6 @@
 
 export function createBoard(){
+    console.log("creating board")
     return {
         getCenter,
         randomEmptyPosition,
@@ -10,6 +11,7 @@ export function createBoard(){
  * @param {ReturnType<typeof getGameState>} game 
 */
 function getCenter(game) {
+    console.log(game)
     const rows = Math.floor(game.level.width.max / game.scale);
     const columns = Math.floor(game.level.height.max / game.scale);
     return { x: Math.floor(0.5 * rows) * game.scale, y: Math.floor(0.5 * columns) * game.scale }

@@ -1,7 +1,7 @@
-import {getGameState} from './game.js'
+import {createGameState} from './state.js'
 /**
  * @param {KeyboardEvent} event
- * @param {ReturnType<typeof getGameState>} game
+ * @param {ReturnType<typeof createGameState>} game
  */
 export function handlePlayerInput(event, game) {
     // damit die Schlangen nicht in sich selber reinlaufen kann, müssen wir prüfen, in welche Richtung der schwanz geht

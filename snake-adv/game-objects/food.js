@@ -3,9 +3,7 @@ import { drawRecFilled } from "../engine/index.js";
 /** ######################################
  *  # essen
  */
-let foodSize;
-let foodX;
-let foodY;
+let foodSize, foodX, foodY;
 
 /** @param {{pos: {x: number, y: number}, scale: number}} options  */
 export function createFood(options) {
