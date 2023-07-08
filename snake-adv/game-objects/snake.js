@@ -29,6 +29,7 @@ export function createSnake(options) {
         collided,
         grow,
         increaseSpeed,
+        decreaseSpeed,
         update,
         draw
     }
@@ -53,11 +54,18 @@ export function grow(){
     body.push({ x: snakeX, y: snakeY, dir: playerDirection , isNew: true});
 }
 
-export function increaseSpeed(){
+export function increaseSpeed(velocity){
+    speed.current += velocity ?? 0.5;
     if(speed.max  <= speed.current) {
-        return speed.max;
+        speed.current = speed.max;
     }
-    return speed.current + 0.5;;
+}
+
+export function decreaseSpeed(velocity){
+    speed.current -= velocity ?? 2;
+    if(speed.min > speed.current) {
+        speed.current = speed.min;
+    }
 }
 
 /** @param {ReturnType<typeof createGameState>} game*/

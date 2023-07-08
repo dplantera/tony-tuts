@@ -1,7 +1,9 @@
 import {createLevel} from './level.js'
 import {createSnake} from './snake.js'
-import {createFood} from './food.js'
 import {createBoard} from './board.js'
+import {createFood} from './pickups/food.js'
+import {createBoost} from './pickups/boost.js'
+import {createSlowdown} from './pickups/slowdown.js';
 
 /** @type {ReturnType<typeof createSnake>} */
 let snake;
@@ -39,17 +41,34 @@ function getGameState(){
         set state(value){state = value},
         scale,
         addFood,
-        removeFood
+        removePickup,
+        addSpecial
     }
 }
 
 function addFood(){
     console.log("adding food");
-    const food = createFood({pos: board.randomEmptyPosition(getGameState()), scale});
-    pickUpItems[food.id] = food;
+    const pickup = createFood({pos: board.randomEmptyPosition(getGameState()), scale});
+    pickUpItems[pickup.id] = pickup;
 }
 
-function removeFood(id){
+/** @param {'SLOWDOWN' | 'BOOST' } type */
+function addSpecial(type){
+    let pickup;
+    switch(type){
+        case 'SLOWDOWN':{
+            pickup = createSlowdown({pos: board.randomEmptyPosition(getGameState()), scale});
+            break;
+        }
+        case 'BOOST':
+            pickup = createBoost({pos: board.randomEmptyPosition(getGameState()), scale});
+            break;
+    }
+    console.log("adding special pickup:", pickup.type);
+    pickUpItems[pickup.id] = pickup;
+}
+
+function removePickup(id){
     console.log("removing food", id);
     delete pickUpItems[id];
 }

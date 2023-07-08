@@ -35,9 +35,29 @@ function draw(time){
 function update(time){
     gameState.snake.update(gameState, time);
     maybe(isGameOver(), gameOver)
-    maybe(findFood(), (food) => snakeEats(food.id));
+    maybe(findPickUp(), (pickUp) => snakeEats(pickUp));
     // level.update(getGameState(), time);
     // Object.values(pickUpItems).forEach(p => p.update())
+}
+
+function isEventTriggered(){
+    const score = gameState.score.current;
+    // every 5th time chances get better
+    const isInDropInterval = score && score % 5 === 0;
+
+    let chance = isInDropInterval? 0.8 : 0.1;
+    const hitChance = Math.random() <= chance;
+    if( hitChance){
+        return true;        
+    }
+    console.log("event missed: ", {isInDropInterval, hitChance})
+    return false;
+}
+
+function dropSpecial(){
+    const hitChance = Math.random() <= .5;
+    let specialType = hitChance? 'SLOWDOWN' : 'BOOST';
+    gameState.addSpecial(specialType);
 }
 
 /**
@@ -69,17 +89,38 @@ function playerLostBySelfDestruct(){
 }
 
 /** Score Bedingung: Pickup Food */
-function findFood(){
-    return Object.values(gameState.pickUpItems).filter(f => f.type === 'FOOD').find(f => f.collided(gameState.snake.pos));
+function findPickUp(){
+    return Object.values(gameState.pickUpItems).find(f => f.collided(gameState.snake.pos));
 }
 
-function snakeEats(id) {
-    console.log("snake eats food with id ", id);
-    gameState.removeFood(id);
-    gameState.score.current++;
-    gameState.snake.grow();
-    gameState.snake.increaseSpeed();
-    gameState.addFood();
+function snakeEats(pickUp) {
+    const id = pickUp.id;
+    switch(pickUp.type){
+        case 'FOOD': {
+            console.log("snake eats food with id ", id);
+            gameState.removePickup(id);
+            gameState.score.current++;
+            gameState.snake.grow();
+            gameState.snake.increaseSpeed();
+            gameState.addFood();
+            
+            maybe(isEventTriggered(), dropSpecial);
+            break;
+        }
+        case 'SLOWDOWN': {
+            console.log("snake eats slowdown with id ", id);
+            gameState.removePickup(id);
+            gameState.snake.decreaseSpeed();
+            break;
+        }
+        case 'BOOST': {
+            console.log("snake eats slowdown with id ", id);
+            gameState.removePickup(id);
+            gameState.snake.increaseSpeed(5);
+            break;
+        }
+    }
+
 }
 
 export function gameOver() {

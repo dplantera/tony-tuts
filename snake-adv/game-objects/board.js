@@ -1,4 +1,4 @@
-
+import {createGameState} from './state.js'
 export function createBoard(){
     console.log("creating board")
     return {
@@ -18,15 +18,16 @@ function getCenter(game) {
 }
 
 /** Eine Zufällige freie position auf dem Spielbrett für ein Raster mit definierten Abstand 
- * @param {ReturnType<typeof getGameState>} game 
+ * @param {ReturnType<typeof createGameState>} game 
 */
 function randomEmptyPosition(game) {
     let newPos = randomPosition(game);
-    let isBlockedBySnake = isPositionEmpty(newPos, game.snake.body);
+    let isBlockedBySnake = isPositionBlocked(newPos, game.snake.body);
+    let isBlockedByPickup = isPositionBlocked(newPos, Object.values(game.pickUpItems));
 
-    while (isBlockedBySnake) {
+    while (isBlockedBySnake || isBlockedByPickup) {
         newPos = randomPosition(game);
-        isBlockedBySnake = isPositionEmpty(newPos, game.snake.body);
+        isBlockedBySnake = isPositionBlocked(newPos, game.snake.body);
     }
     return newPos
 }
@@ -39,7 +40,7 @@ function randomPosition(game) {
 }
 
 /** Gibt an, ob eine bestimmte position (x, y) auf einer Auswahl von belegten position liegt [(x,y), (x,y)] */
-function isPositionEmpty(pos, belegtePositionen) {
+function isPositionBlocked(pos, belegtePositionen) {
     for (let belegtePosition of belegtePositionen) {
         if (pos.x === belegtePosition.x && pos.y === belegtePosition.y) {
             return true;
