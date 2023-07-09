@@ -1,19 +1,25 @@
 
 import {handlePlayerInput} from './input.js'
+import { createSoundsManager } from './sounds.js';
 import {createGameState} from './state.js'
 /** Eine Zufällige position auf dem Spielbrett für ein Raster mit definierten Abstand */
-
+/** @type {ReturnType<typeof createGameState>} */
 let gameState;
+/** @type {ReturnType<createSoundsManager>} */
+let soundManager;
 let scale;
 
-export function createGame(ctx){
+export function createGame(ctx, _soundManager){
     console.log("creating game")
     scale = 15;
+    soundManager = _soundManager;
     addEventListener("keypress", (e) => handlePlayerInput(e, gameState));
+
     return {
         get state(){return gameState.state},
         get score(){return gameState.score},
         get level(){return gameState.level},
+        get player(){return gameState.snake},
         start: () => startGame(ctx),
         draw,
         update
@@ -23,7 +29,7 @@ export function createGame(ctx){
 function startGame(ctx){
     console.log("starting game")
     gameState = createGameState(ctx, scale);
-    gameState.state = "RUNNING"
+    gameState.state = "RUNNING";
 }
 
 function draw(time){
@@ -95,9 +101,11 @@ function findPickUp(){
 
 function snakeEats(pickUp) {
     const id = pickUp.id;
+    const sounds = soundManager.map;
     switch(pickUp.type){
         case 'FOOD': {
             console.log("snake eats food with id ", id);
+            soundManager.getSound(sounds['snake-eat-food']).play();
             gameState.removePickup(id);
             gameState.score.current++;
             gameState.snake.grow();
@@ -109,12 +117,14 @@ function snakeEats(pickUp) {
         }
         case 'SLOWDOWN': {
             console.log("snake eats slowdown with id ", id);
+            soundManager.getSound(sounds['snake-eat-special']).play();
             gameState.removePickup(id);
             gameState.snake.decreaseSpeed();
             break;
         }
         case 'BOOST': {
             console.log("snake eats slowdown with id ", id);
+            soundManager.getSound(sounds['snake-eat-special']).play();
             gameState.removePickup(id);
             gameState.snake.increaseSpeed(5);
             break;
@@ -127,8 +137,14 @@ export function gameOver() {
     const score = gameState.score;
     console.log("game over", score);
     gameState.state = 'GAME_OVER';
+    if(score.current > score.high) {
+        score.high = score.current;
+        score.isHighScore = true;
+        soundManager.getSound(soundManager.map['game-over-highscore']).play();
+    }
     score.high  = Math.max(score.high, score.current);
 }
+
 
 function maybe(condition, func){
     const isBoolean = typeof condition === "boolean";

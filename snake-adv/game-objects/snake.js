@@ -26,6 +26,7 @@ export function createSnake(options) {
         get body(){return body},
         set direction(dir) { playerDirection = dir}, 
         get direction() { return playerDirection},
+        get speed() {return speed},
         collided,
         grow,
         increaseSpeed,

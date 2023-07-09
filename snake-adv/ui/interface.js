@@ -33,7 +33,7 @@ export function createUi(_ctx, game){
 }
 
  function drawScoreboard(score) {
-    if (score.last !== score.current && score.current >= score.high) {
+    if (score.isHighScore) {
         const gameOverTxt = `NEW HIGH SCORE: ${score.high}`;
         canvas2dContext.textAlign = 'center'
         canvas2dContext.fillStyle = 'green'

@@ -14,7 +14,7 @@ let pickUpItems = new Map();
 let scale;
 /** @type {'RUNNING' | 'GAME_OVER' | 'PAUSE' | 'START'} */
 let state = 'START';
-/** @type {{current: number, last: number, high: number}} */
+/** @type {{current: number, last: number, high: number, isHighScore?: boolean}} */
 let score;
 /** @type {ReturnType<typeof createBoard>} */
 let board;
