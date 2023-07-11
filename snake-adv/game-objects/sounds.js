@@ -2,7 +2,8 @@ export const sounds = {
     "snake-eat-food" : "snake-eat-food",
     "game-over-highscore" : "game-over-highscore",
     "snake-eat-special" : "snake-eat-special",
-    "ambients": "ambients"
+    "ambients": "ambients",
+    "game-over": "game-over"
 }
 
 const soundPaths = {
@@ -10,6 +11,7 @@ const soundPaths = {
     "game-over-highscore" : {src: "./assets/sounds/game-over-highscore.wav"},
     "snake-eat-special" : {src: "./assets/sounds/snake-eat-special.wav"},
     "ambients" : {src: "./assets/sounds/ambients.mp3", loop: true},
+    "game-over" : {src: "./assets/sounds/game-over.wav"},
 };
 
 const soundCache = {};
@@ -44,12 +46,18 @@ export class Sound {
         this.sound.style.display = "none";
         document.body.appendChild(this.sound);
         this.sound.volume = 1;
+        this.played = false;
     }
     get isPlaying(){
         return this.sound.paused ?? false;
     }
-    play(){
-        this.sound.play();
+    play(options){
+        if(!this.played){
+            this.sound.play();
+        }
+        if(options?.onlyOnce){
+            this.played = true;
+        }
     }
     pause(){
         this.sound.pause();

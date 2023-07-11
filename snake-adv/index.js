@@ -29,8 +29,17 @@ function update(time) {
     if (game.state === 'START') {
         game.start();
     }
+   
     if (game.state !== "RUNNING") {
         ambientSound.pause();
+        if (game.state == "GAME_OVER") {
+            if(game.score.isHighScore){
+                soundManager.getSound(soundManager.map['game-over-highscore']).play({onlyOnce: true});
+            }else{
+                soundManager.getSound(soundManager.map['game-over']).play({onlyOnce: true});
+            }
+            return;
+        }
         return;
     }
     ambientSound.play();
@@ -53,7 +62,7 @@ function update(time) {
 }
 
 function zeichne(time) {
-    game.draw(time);
+    game.draw( time);
     if (game.state === "PAUSE") {
         ui.drawPause();
     }

@@ -9,16 +9,16 @@ export function handlePlayerInput(event, game) {
     const player = game.snake;
     
     let key = event.key;
-    if (key === 'a' && (player.direction !== 'RECHTS' && lastDirection !== 'RECHTS')) {
+    if (key === 'a' || key == 'ArrowLeft' && (player.direction !== 'RECHTS' && lastDirection !== 'RECHTS')) {
         player.direction = 'LINKS'
     }
-    if (key === 'd' && (player.direction !== 'LINKS' && lastDirection !== 'LINKS')) {
+    if (key === 'd' || key == 'ArrowRight' && (player.direction !== 'LINKS' && lastDirection !== 'LINKS')) {
         player.direction = 'RECHTS'
     }
-    if (key === 'w' && (player.direction !== 'RUNTER' && lastDirection !== 'RUNTER')) {
+    if (key === 'w' || key == 'ArrowUp' && (player.direction !== 'RUNTER' && lastDirection !== 'RUNTER')) {
         player.direction = 'HOCH'
     }
-    if (key === 's' && (player.direction !== 'HOCH' && lastDirection !== 'HOCH')) {
+    if (key === 's' || key == 'ArrowDown' && (player.direction !== 'HOCH' && lastDirection !== 'HOCH')) {
         player.direction = 'RUNTER'
     }
     if (key === ' ') {

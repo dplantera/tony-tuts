@@ -13,7 +13,7 @@ export function createGame(ctx, _soundManager){
     console.log("creating game")
     scale = 15;
     soundManager = _soundManager;
-    addEventListener("keypress", (e) => handlePlayerInput(e, gameState));
+    document.body.addEventListener("keydown", (e) => handlePlayerInput(e, gameState));
 
     return {
         get state(){return gameState.state},
