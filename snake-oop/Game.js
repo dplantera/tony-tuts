@@ -1,5 +1,6 @@
 import { GameLoop } from "./GameLoop.js";
 import { GameState } from "./GameState.js";
+import { Player } from "./Player.js";
 
 export class Game {
     /**
@@ -17,18 +18,34 @@ export class Game {
 
         this.log = false ? console.log : () => {};
     }
+
     start(){
         this.ctx.canvas.width = this.state.width;
         this.ctx.canvas.height = this.state.height;
+        this.state.addPlayer(new Player());
         this.log("update start")
     }
+
     update() {
         this.log("update game")
+        this.updateState(this.state);
     }
+
     draw(){
         this.log("draw game")
+        // render level
         let xStart = 0, yStart = 0, xEnd = this.state.width, yEnd = this.state.height;
         this.ctx.clearRect(xStart, yStart, xEnd, yEnd);
         this.ctx.strokeRect(xStart, yStart, xEnd, yEnd);
+
+        this.renderState(this.state);
+    }
+
+    updateState(state){
+        state.player.update(this);
+    }
+
+    renderState(state){
+        state.player.draw(this);
     }
 }
