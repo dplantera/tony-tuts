@@ -1,5 +1,6 @@
-import { drawRecFilled } from "../engine/index.js";
-import {createGameState} from "./state.js"
+import { drawRecFilled } from "../../engine/index.js";
+import { initImage } from "../images.js";
+import {createGameState} from "../state.js"
 /**
  * ######################################
  * # snake
@@ -7,9 +8,10 @@ import {createGameState} from "./state.js"
 let snakeSize, speed, snakeX, snakeY, body,  movement;
 /** @type {'HOCH' | 'RUNTER' | 'LINKS' | 'RECHTS'} */
 let playerDirection;
-
+let img;
 /** @param {{pos: {x: number, y: number}, scale: number}} options  */
 export function createSnake(options) {
+
     console.log("creating snake", options)
     snakeSize = options.scale;
     speed = {current: 10, min: 10, max: 25};
@@ -40,10 +42,21 @@ function update(game, time){
     movement.update(game, time)
 }
 
-function draw(){
+let xIndex = 0;
+
+/** @param {CanvasRenderingContext2D} ctx  */
+function draw(ctx){
     for (let b of body) {
         drawRecFilled(b.x, b.y, snakeSize, snakeSize, "black");
     }
+    let img = initImage();
+    
+    xIndex = ++xIndex % 2;
+    let dx = body[0].x, dy = body[0].y, size = 15 
+    //let posX = 1, posY = 2, posW = 9, posH = 7;
+    let posX = 11 * xIndex , posY = 2, posW = 10, posH = 7;
+    ctx.drawImage(img, posX,posY,posW,posH,dx,dy,size,size);
+    
 }
 
 function collided(pos){

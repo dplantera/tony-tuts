@@ -1,5 +1,5 @@
 import {createLevel} from './level.js'
-import {createSnake} from './snake.js'
+import {createSnake} from './player/snake.js'
 import {createBoard} from './board.js'
 import {createFood} from './pickups/food.js'
 import {createBoost} from './pickups/boost.js'

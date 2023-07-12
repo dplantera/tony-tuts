@@ -1,4 +1,4 @@
-let fps = 60;
+let fps = 1;
 let deltaTime;
 
 export function globals(){

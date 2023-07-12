@@ -62,7 +62,7 @@ function update(time) {
 }
 
 function zeichne(time) {
-    game.draw( time);
+    game.draw( time, getContext());
     if (game.state === "PAUSE") {
         ui.drawPause();
     }

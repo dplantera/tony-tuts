@@ -32,9 +32,9 @@ function startGame(ctx){
     gameState.state = "RUNNING";
 }
 
-function draw(time){
+function draw(time, ctx){
     gameState.level.draw(gameState, time);
-    gameState.snake.draw(gameState, time);
+    gameState.snake.draw(ctx);
     Object.values(gameState.pickUpItems).forEach(p => p.draw())
 }
 
