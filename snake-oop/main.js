@@ -1,5 +1,5 @@
-import { GameLoop } from "./GameLoop.js";
-import { Game } from "./Game.js";
+import { GameLoop } from "./game/GameLoop.js";
+import { Game } from "./game/Game.js";
 
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById("canvas");

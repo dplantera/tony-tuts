@@ -12,7 +12,7 @@ export class GameLoop {
             current : 0,
             last : 0,
             delta : 0,
-            fps : 1,
+            fps : 60,
         }
         this.log = false ? console.log : () => {};
     }

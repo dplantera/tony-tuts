@@ -1,6 +1,6 @@
 import { GameLoop } from "./GameLoop.js";
 import { GameState } from "./GameState.js";
-import { Player } from "./Player.js";
+import { Player } from "../player/Player.js";
 
 export class Game {
     /**
