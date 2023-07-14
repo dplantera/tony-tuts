@@ -41,5 +41,5 @@ function shouldRenderFrame(lastRenderSecond, secondsToRender, fps){
         return true;
     }
     deltaTime = secondsToRender- lastRenderSecond; 
-    return (secondsToRender- lastRenderSecond) >= (1 / fps);
+    return (deltaTime) >= (1 / fps);
 }

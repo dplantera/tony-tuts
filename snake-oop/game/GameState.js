@@ -7,6 +7,7 @@ export class GameState {
         this.pickUps = [];
         this.width = width;
         this.height = height;
+        this.scale = 10;
     }
     
     /** @param {Player} player  */

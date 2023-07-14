@@ -75,7 +75,7 @@ function draw(){
         ctx.setLineDash([6]);
         ctx.strokeStyle = "blue"
         ctx.strokeRect(startVec.x,startVec.y, size, size);
-
+        
         lastAnimatedVec.x = startVec.x + (endVec.x - startVec.x) * duration;
         lastAnimatedVec.y = startVec.y + (endVec.y - startVec.y) * duration;
 

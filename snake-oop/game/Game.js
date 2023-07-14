@@ -22,7 +22,7 @@ export class Game {
     start(){
         this.ctx.canvas.width = this.state.width;
         this.ctx.canvas.height = this.state.height;
-        this.state.addPlayer(new Player());
+        this.state.addPlayer(new Player(this));
         this.log("update start")
     }
 

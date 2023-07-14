@@ -3,23 +3,27 @@ import { SnakeAnimation } from "./SnakeAnimation.js";
 import { SnakeInput } from "./SnakeInput.js";
 
 export class Player {
-    constructor() {
+    constructor(game) {
+        this.game = game;
         this.input = new SnakeInput(SnakeInput.RIGHT)
-        this.snake = new Snake(this.input);
+        this.snake = new Snake(game);
         this.animation = new SnakeAnimation(this.snake);
         addEventListener("keydown", this.handleInput.bind(this));
+
+        // debug
+        this.snake.grow();
     }
 
-    update(game){
+    update(){
         if(!this.animation.isPlaying()){
             this.snake.update(this.input);
         }
-        this.animation.update(game);
+        this.animation.update(this.game);
     }
 
-    draw(game){
-        this.animation.draw(game);
-        this.snake.draw(game);
+    draw(){
+        this.animation.draw(this.game);
+        this.snake.draw(this.game);
     }
 
     changePlayerDirection(direction){
@@ -44,7 +48,7 @@ export class Player {
         if (key === 's' && (playerDirection != SnakeInput.UP)) {
             this.changePlayerDirection(SnakeInput.DOWN);
         }
-        if (key === ' ' && (playerDirection != SnakeInput.UP)) {
+        if (key === ' ') {
             this.changePlayerDirection(SnakeInput.IDLE);
         }
 /* 

@@ -39,4 +39,19 @@ export class Vec2 {
     equal(vec2){
         return this.x === vec2.x && this.y === vec2.y;
     }
+
+    lerp(endVec, fraction){
+        return new Vec2(
+            cap(endVec.x, lerp(this.x, endVec.x, fraction), endVec.x < this.x),
+            cap(endVec.y, lerp(this.y, endVec.y, fraction), endVec.y < this.y),
+        )
+    }
+}
+
+function lerp(start, end, fraction){
+    return start + (end - start) * fraction;
+}
+
+function cap(max, current, negativ){
+    return negativ ? Math.max(current, max) : Math.min(current, max);
 }
