@@ -8,7 +8,7 @@ export class Snake {
     constructor(game) {
         this.game = game;
         this.dir = SnakeInput.IDLE;
-        this.speed = 15;
+        this.speed = 5;
         this.pos = { current: new Vec2(0, 0), last: new Vec2(0, 0) };
         this.body = [Vec2.fromVec2(this.pos.current)];
         this.removed;

@@ -9,15 +9,9 @@ export class Player {
         this.snake = new Snake(game);
         this.animation = new SnakeAnimation(this.snake);
         addEventListener("keydown", this.handleInput.bind(this));
-        addEventListener("mousedown", () => {
-            for(let i=0; 100> i; i++){
-                this.snake.grow()
-            }
-        });
+   ;
+        addEventListener("mousedown", this.debug.bind(this));
         
-
-        // debug
-        this.snake.grow();
     }
 
     update(){
@@ -35,7 +29,17 @@ export class Player {
     changePlayerDirection(direction){
         this.input.dir = direction;
     }
-
+        /** @param {MouseEvent} e */
+    debug(e){
+        e.preventDefault();
+        if(e.button == 2){
+            this.snake.body.splice(this.snake.body.length - 5, 5);
+        }else {
+            for(let i=0; 10 > i; i++){
+                this.snake.grow()
+            }
+        }
+    }
     /** @param {KeyboardEvent} e */
     handleInput(e) {
         e.preventDefault();
