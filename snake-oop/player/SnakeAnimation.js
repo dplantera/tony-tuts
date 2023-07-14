@@ -11,7 +11,7 @@ export class SnakeAnimation {
         this.snake = snake;
         this.duration = 0;
 
-        this.frames = [];
+        this.frames;
     }
 
     isPlaying() {
@@ -25,17 +25,18 @@ export class SnakeAnimation {
         }
         const body = this.snake.body;
         this.duration += game.loop.render.delta * this.snake.speed;
-        this.frames = this.snake.removed
-            ? [this.snake.removed.lerp(body.at(-1), this.duration)]
-            : [];
-        for (let i = body.length - 1; i > 0; i--) {
+        this.frames = [];
+
+        for (let i = 1; i < body.length; i++) {
             this.frames.push(body.at(i).lerp(body.at(i-1), this.duration));
         }
-        
-        if (this.frames.at(-1).equal(this.snake.pos.current)) {
-            this.duration = 0;
-        }
+        if(this.snake.removed){
+            this.frames.push(this.snake.removed.lerp(body.at(-1), this.duration));
+         }
 
+        if (this.frames.at(0).equal(this.snake.pos.current)) {
+          this.duration = 0;
+        }
     }
 
     /** @param {Game} game  */
