@@ -9,10 +9,15 @@ export class Player {
         this.snake = new Snake(game);
         this.animation = new SnakeAnimation(this.snake);
         addEventListener("keydown", this.handleInput.bind(this));
+        addEventListener("mousedown", () => {
+            for(let i=0; 100> i; i++){
+                this.snake.grow()
+            }
+        });
+        
 
-        this.snake.grow();
-        this.snake.grow();
         // debug
+        this.snake.grow();
     }
 
     update(){

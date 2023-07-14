@@ -8,7 +8,7 @@ export class Snake {
     constructor(game) {
         this.game = game;
         this.dir = SnakeInput.IDLE;
-        this.speed = 1;
+        this.speed = 15;
         this.pos = { current: new Vec2(0, 0), last: new Vec2(0, 0) };
         this.body = [Vec2.fromVec2(this.pos.current)];
         this.removed;
@@ -32,7 +32,6 @@ export class Snake {
         if(this.dir === SnakeInput.IDLE){
             return;
         }
-        console.log(this.body);
         // bewege alle segemente um eins
         this.removed = this.body.at(-1);
         for (let i = this.body.length - 1; i > 0; i--) {

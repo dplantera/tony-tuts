@@ -34,7 +34,6 @@ export class SnakeAnimation {
         
         if (this.frames.at(-1).equal(this.snake.pos.current)) {
             this.duration = 0;
-            console.log(this.frames)
         }
 
     }
