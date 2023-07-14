@@ -10,6 +10,8 @@ export class Player {
         this.animation = new SnakeAnimation(this.snake);
         addEventListener("keydown", this.handleInput.bind(this));
 
+        this.snake.grow();
+        this.snake.grow();
         // debug
     }
 
@@ -23,7 +25,7 @@ export class Player {
     draw(){
         this.animation.draw(this.game);
         this.snake.draw(this.game);
-    }
+     }
 
     changePlayerDirection(direction){
         this.input.dir = direction;

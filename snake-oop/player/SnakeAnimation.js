@@ -11,8 +11,7 @@ export class SnakeAnimation {
         this.snake = snake;
         this.duration = 0;
 
-        // head
-        this.posCurrent = Vec2.fromVec2(this.snake.pos.last)
+        this.frames = [];
     }
 
     isPlaying() {
@@ -21,19 +20,30 @@ export class SnakeAnimation {
 
     /** @param {Game} game  */
     update(game) {
-        if(this.snake.dir.equal(SnakeInput.IDLE)){
+        if (this.snake.dir.equal(SnakeInput.IDLE)) {
             return;
         }
+        const body = this.snake.body;
         this.duration += game.loop.render.delta * this.snake.speed;
-        this.posCurrent = this.snake.pos.last.lerp(this.snake.pos.current, this.duration);
-        if(this.posCurrent.equal(this.snake.pos.current)){
-            this.duration = 0;
+        this.frames = this.snake.removed
+            ? [this.snake.removed.lerp(body.at(-1), this.duration)]
+            : [];
+        for (let i = body.length - 1; i > 0; i--) {
+            this.frames.push(body.at(i).lerp(body.at(i-1), this.duration));
         }
+        
+        if (this.frames.at(-1).equal(this.snake.pos.current)) {
+            this.duration = 0;
+            console.log(this.frames)
+        }
+
     }
 
     /** @param {Game} game  */
     draw(game) {
-        game.ctx.fillStyle = "black";
-        game.ctx.fillRect(this.posCurrent.x, this.posCurrent.y, this.snake.size, this.snake.size);
+        for(const f of this.frames){
+            game.ctx.fillStyle = "black";
+            game.ctx.fillRect(f.x, f.y, this.snake.size, this.snake.size);
+        }
     }
 }
