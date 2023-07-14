@@ -24,7 +24,6 @@ export class Player {
 
     changePlayerDirection(direction){
         this.input.dir = direction;
-        this.animation.end();
     }
 
     /** @param {KeyboardEvent} e */

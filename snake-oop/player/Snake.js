@@ -13,18 +13,24 @@ export class Snake {
     /** @param {SnakeInput} input  */
     update(input) {
         this.dir = input.dir;
-        const scaledInput = input.dir.scale(Snake.size);
-        const newPos = this.pos.current.add(scaledInput)
+        this.moveHead();
+    }
 
+    changeDirection(direction){
+        this.dir = direction;
+    }
+
+    moveHead(){
+        const scaledInput = this.dir.scale(Snake.size);
         this.pos.last = this.pos.current;
-        this.pos.current = newPos;
-        this.pos.next = newPos.add(scaledInput);
+        this.pos.current = this.pos.next;
+        this.pos.next = this.pos.current.add(scaledInput); 
     }
 
     /** @param {Game} game  */
     draw(game) {
-        game.ctx.fillStyle = "black";
-        game.ctx.fillRect(this.pos.current.x, this.pos.current.y, Snake.size, Snake.size)
+        //game.ctx.fillStyle = "black";
+        //game.ctx.fillRect(this.pos.current.x, this.pos.current.y, Snake.size, Snake.size)
     }
 }
 

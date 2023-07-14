@@ -55,12 +55,7 @@ export class SnakeHeadAnimation {
     }
 
     isPlaying() {
-        return !this.reachedEnd();
-    }
-
-    end() {
-        this.duration = 0;
-        this.posCurrent = Vec2.fromVec2(this.snake.pos.next);
+        return !this.posCurrent.equal(this.posStart) && !this.reachedEnd();
     }
 
     /** @param {Game} game  */
@@ -108,12 +103,6 @@ export class SnakeTailAnimation {
 
     isPlaying() {
         return !this.reachedEnd();
-    }
-
-    end() {
-        this.duration = 0;
-        this.posCurrent = Vec2.fromVec2(this.snake.pos.next);
-        this.hasStarted = false;
     }
 
     /** @param {Game} game  */
