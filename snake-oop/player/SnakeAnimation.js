@@ -21,10 +21,9 @@ export class SnakeAnimation {
 
     /** @param {Game} game  */
     update(game) {
-        if(this.snake.dir === SnakeInput.IDLE){
+        if(this.snake.dir.equal(SnakeInput.IDLE)){
             return;
         }
-
         this.duration += game.loop.render.delta * this.snake.speed;
         this.posCurrent = this.snake.pos.last.lerp(this.snake.pos.current, this.duration);
         if(this.posCurrent.equal(this.snake.pos.current)){

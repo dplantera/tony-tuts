@@ -11,7 +11,6 @@ export class Player {
         addEventListener("keydown", this.handleInput.bind(this));
 
         // debug
-        this.snake.grow();
     }
 
     update(){
