@@ -18,9 +18,6 @@ export class SnakeAnimation {
 
     /** @param {Game} game  */
     update(game) {
-        if (this.snake.dir.equal(SnakeInput.IDLE)) {
-            return;
-        }
         this.duration += game.loop.render.delta * this.snake.speed;
 
         // @optimize: we only need to animate tail and head - mid segment will be same on each frame
@@ -57,7 +54,17 @@ export class SnakeAnimation {
 
     /** @param {Game} game  */
     draw(game) {
+        for (const f of this.snake.belly) {
+            let pos = this.snake.body.at(- f);
+            let size = this.snake.size;
+          
+            game.ctx.fillStyle = "blue";
+            game.ctx.fillRect(pos.x - size/2, pos.y - size/2, size * 2 , size * 2);
+            game.ctx.fill();
+        }
+
         for (const f of this.frames) {
+            game.ctx.beginPath();
             game.ctx.fillStyle = "black";
             game.ctx.fillRect(f.x, f.y, this.snake.size, this.snake.size);
         }
