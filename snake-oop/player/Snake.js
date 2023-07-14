@@ -1,4 +1,5 @@
 import { SnakeInput } from "./SnakeInput.js";
+import { SnakeAnimation } from "./SnakeAnimation.js";
 import { Game } from "../game/Game.js";
 import { Vec2 } from "../Lib.js";
 
@@ -9,19 +10,41 @@ export class Snake {
         this.game = game;
         this.dir = SnakeInput.IDLE;
         this.speed = 5;
-        this.pos = { current: new Vec2(0, 0), last: new Vec2(0, 0) };
+
+        this.pos = { current: new Vec2(0, 0) };
         this.body = [Vec2.fromVec2(this.pos.current)];
+        /** holds the dropped tail segment @type {Vec2}*/
         this.removed;
+
+        this.animation = new SnakeAnimation(this);
      }
 
     get size() {
         return this.game.state.scale;
     }
+    get head(){
+        return this.body.at(0);
+    }
+    get tailStart(){
+        return this.body.at(1);
+    }
+    get tailMid(){
+        return this.body.slice(1, this.length)
+    }
+    get tailEnd(){
+        return this.body.at(-1);
+    }
+    get length(){
+        return this.body.length;
+    }
 
     /** @param {SnakeInput} input  */
     update(input) {
-        this.dir = input.dir;
-        this.moveHead();
+        if(!this.animation.isPlaying()){
+            this.dir = input.dir;
+            this.moveHead();
+        }
+        this.animation.update(this.game);
     }
 
     changeDirection(direction) {
@@ -33,25 +56,21 @@ export class Snake {
             return;
         }
         // bewege alle segemente um eins
-        this.removed = this.body.at(-1);
+        this.removed = this.tailEnd;
         for (let i = this.body.length - 1; i > 0; i--) {
             this.body[i] = this.body[i - 1];
         }
         const scaledInput = this.dir.scale(this.size);
-        this.pos.last = this.pos.current;
-        this.pos.current = this.pos.current.add(scaledInput);
-        this.body[0] = Vec2.fromVec2(this.pos.current);
+        this.body[0] = Vec2.fromVec2(this.head.add(scaledInput));
     }
 
     draw() {
-        // @check: the animation is drawing - maybe it should be part of snake then
-
-  
+        this.animation.draw(this.game)
     }
 
     grow(){
         const scaledInput = this.dir.scale(this.size);
-        this.body.push(this.pos.current.add(scaledInput));
+        this.body.push(this.tailEnd);
     }
 }
 

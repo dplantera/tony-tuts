@@ -1,5 +1,4 @@
 import { Snake } from "./Snake.js";
-import { SnakeAnimation } from "./SnakeAnimation.js";
 import { SnakeInput } from "./SnakeInput.js";
 
 export class Player {
@@ -7,22 +6,15 @@ export class Player {
         this.game = game;
         this.input = new SnakeInput(SnakeInput.RIGHT)
         this.snake = new Snake(game);
-        this.animation = new SnakeAnimation(this.snake);
         addEventListener("keydown", this.handleInput.bind(this));
-   ;
         addEventListener("mousedown", this.debug.bind(this));
-        
     }
 
     update(){
-        if(!this.animation.isPlaying()){
-            this.snake.update(this.input);
-        }
-        this.animation.update(this.game);
+        this.snake.update(this.input)
     }
 
     draw(){
-        this.animation.draw(this.game);
         this.snake.draw(this.game);
      }
 

@@ -28,7 +28,7 @@ export class SnakeAnimation {
         // animation feels a little jittery which may be related to total recreation
         this.frames = this.recreateFrames();
         // reset animation when head moved
-        if (this.frames.at(0)?.equal(this.snake.pos.current)) {
+        if (this.frames.at(0)?.equal(this.snake.head)) {
             this.duration = 0;
         }
     }
@@ -36,20 +36,19 @@ export class SnakeAnimation {
      * @returns {Vec2[]}
      */
     recreateFrames() {
-        const body = this.snake.body;
+        const snake = this.snake;
         const frames = []
-        if (body.length > 1) {
-            const animatedHead = body.at(1).lerp(body.at(0), this.duration);
+        if (snake.length > 1) {
+            const animatedHead = snake.tailStart.lerp(snake.head, this.duration);
             frames.push(animatedHead)
         }
 
-        if (body.length > 2) {
-            const midSegment = body.slice(1, body.length);
-            frames.push(...midSegment);
+        if (snake.length > 2) {
+            frames.push(...snake.tailMid);
         }
 
-        if (this.snake.removed) {
-            const animatedTail = this.snake.removed.lerp(body.at(-1), this.duration);
+        if (snake.removed) {
+            const animatedTail = snake.removed.lerp(snake.tailEnd, this.duration);
             frames.push(animatedTail);
         }
 
