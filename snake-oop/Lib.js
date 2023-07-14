@@ -32,6 +32,12 @@ export class Vec2 {
     add(vec2) {
         return new Vec2(this.x + vec2.x, this.y + vec2.y);
     }
+    mid(vec2){
+        return new Vec2(
+            (this.x + vec2.x ) / 2,
+            (this.y + vec2.y ) / 2,
+        )
+    }
     scale(scalar){
         return new Vec2(this.x * scalar, this.y * scalar);
     }

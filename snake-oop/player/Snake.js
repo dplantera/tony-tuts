@@ -17,32 +17,33 @@ export class Snake {
         this.removed;
 
         this.animation = new SnakeAnimation(this);
-     }
+        this.belly = [];
+    }
 
     get size() {
         return this.game.state.scale;
     }
-    get head(){
+    get head() {
         return this.body.at(0);
     }
-    get tailStart(){
+    get tailStart() {
         return this.body.at(1);
     }
-    get tailMid(){
+    get tailMid() {
         return this.body.slice(1, this.length)
     }
-    get tailEnd(){
+    get tailEnd() {
         return this.body.at(-1);
     }
-    get length(){
+    get length() {
         return this.body.length;
     }
 
     /** @param {SnakeInput} input  */
     update(input) {
-        if(!this.animation.isPlaying()){
+        if (!this.animation.isPlaying()) {
             this.dir = input.dir;
-            this.moveHead();
+            this.move();
         }
         this.animation.update(this.game);
     }
@@ -51,26 +52,25 @@ export class Snake {
         this.dir = direction;
     }
 
-    moveHead() {
-        if(this.dir === SnakeInput.IDLE){
-            return;
-        }
-        // bewege alle segemente um eins
-        this.removed = this.tailEnd;
-        for (let i = this.body.length - 1; i > 0; i--) {
-            this.body[i] = this.body[i - 1];
-        }
+    /** to move the snake we only need to handle the head and the end of the tail - mid segment is static*/
+    move() {
+        const head = this.head;
+        this.removed = this.body.pop();
         const scaledInput = this.dir.scale(this.size);
-        this.body[0] = Vec2.fromVec2(this.head.add(scaledInput));
+        const newHead = head.add(scaledInput);
+        // add head at the beginning
+        this.body.unshift(newHead);
+        // digest food
+        this.belly = this.belly.map(b => --b).filter(b  => b > 0 )
     }
 
     draw() {
         this.animation.draw(this.game)
     }
-
-    grow(){
-        const scaledInput = this.dir.scale(this.size);
-        this.body.push(this.tailEnd);
+    
+    grow() {
+        this.belly.push(this.length);
+        this.body.unshift(this.head);
     }
 }
 

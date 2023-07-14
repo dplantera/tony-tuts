@@ -54,19 +54,28 @@ export class SnakeAnimation {
 
     /** @param {Game} game  */
     draw(game) {
-        for (const f of this.snake.belly) {
-            let pos = this.snake.body.at(- f);
-            let size = this.snake.size;
-          
-            game.ctx.fillStyle = "blue";
-            game.ctx.fillRect(pos.x - size/2, pos.y - size/2, size * 2 , size * 2);
-            game.ctx.fill();
-        }
+        game.ctx.save();
 
         for (const f of this.frames) {
             game.ctx.beginPath();
             game.ctx.fillStyle = "black";
             game.ctx.fillRect(f.x, f.y, this.snake.size, this.snake.size);
         }
+       
+        for (const f of this.snake.belly) {
+            let pos = this.snake.body.at(- f);
+            let size = this.snake.size;
+          
+            game.ctx.fillStyle = "black";
+            game.ctx.beginPath();
+            game.ctx.arc(pos.x + size/2, pos.y + size/2, size - 3, 0 , 2 * Math.PI);
+            game.ctx.fill();
+            game.ctx.beginPath();
+            game.ctx.arc(pos.x + size/2, pos.y + size/2, size - 2, 0 , 2 * Math.PI);
+            game.ctx.stroke();
+        }
+        game.ctx.restore();
+
     }
+
 }
